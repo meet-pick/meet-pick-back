@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 public class AuthDto {
 
+    // request
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
@@ -41,6 +42,8 @@ public class AuthDto {
         private String password;
     }
 
+
+    // response
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
@@ -49,6 +52,80 @@ public class AuthDto {
         private Long id;
         private String username;
         private String nickname;
+        private String message;
+    }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class LoginResponse {
+        private String accessToken;   // 서비스 내부에서만 사용
+        private String refreshToken;  // 서비스 내부에서만 사용
+        private String tokenType;
+        private UserInfo userInfo;
+
+        @Getter
+        @NoArgsConstructor
+        @AllArgsConstructor
+        @Builder
+        public static class UserInfo {
+            private Long id;
+            private String username;
+            private String nickname;
+        }
+    }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class SecureLoginResponse {
+        private String tokenType;        // "Bearer"
+        private String message;          // "로그인 성공"
+        private UserInfo userInfo;       // 사용자 정보
+        private Long expiresIn;          // 토큰 만료 시간 (초)
+
+        @Getter
+        @NoArgsConstructor
+        @AllArgsConstructor
+        @Builder
+        public static class UserInfo {
+            private Long id;
+            private String username;
+            private String nickname;
+        }
+
+        // LoginResponse에서 SecureLoginResponse로 변환
+        public static SecureLoginResponse from(LoginResponse loginResponse) {
+            return SecureLoginResponse.builder()
+                    .tokenType(loginResponse.getTokenType())
+                    .message("로그인이 완료되었습니다.")
+                    .userInfo(SecureLoginResponse.UserInfo.builder()
+                            .id(loginResponse.getUserInfo().getId())
+                            .username(loginResponse.getUserInfo().getUsername())
+                            .nickname(loginResponse.getUserInfo().getNickname())
+                            .build())
+                    .expiresIn(15 * 60L) // 30분 (초 단위)
+                    .build();
+        }
+    }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class UsernameCheckResponse {
+        private String username;
+        private boolean available;    // true: 사용 가능, false: 이미 존재
+        private String message;
+    }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class LogoutResponse {
         private String message;
     }
 }

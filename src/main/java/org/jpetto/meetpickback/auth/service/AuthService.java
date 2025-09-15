@@ -6,6 +6,12 @@ import org.jpetto.meetpickback.auth.dto.AuthDto;
 import org.jpetto.meetpickback.auth.entity.Account;
 import org.jpetto.meetpickback.auth.repository.AccountRepository;
 import org.jpetto.meetpickback.global.utils.JwtUtil;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuthService {
     private final AccountRepository accountRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
+    private final AuthenticationManager authenticationManager;
 
     public AuthDto.SignUpResponse signUp(AuthDto.SignUpRequest signUpRequest) {
         if (accountRepository.existsByUsername(signUpRequest.getUsername())) {
@@ -48,4 +56,74 @@ public class AuthService {
         return value == null ? "" : value;
     }
 
+    public AuthDto.UsernameCheckResponse checkUsername(String username) {
+        if (username == null || username.trim().isEmpty()) {
+            return AuthDto.UsernameCheckResponse.builder()
+                    .username(username)
+                    .available(false)
+                    .message("아이디를 입력해주세요.")
+                    .build();
+        }
+
+        if (username.length() < 6 || username.length() > 20) {
+            return AuthDto.UsernameCheckResponse.builder()
+                    .username(username)
+                    .available(false)
+                    .message("아이디는 6자 이상 20자 이하여야 합니다.")
+                    .build();
+        }
+
+        boolean exists = accountRepository.existsByUsername(username);
+
+        if (exists) {
+            log.debug("아이디 중복 확인 - 이미 존재: {}", username);
+            return AuthDto.UsernameCheckResponse.builder()
+                    .username(username)
+                    .available(false)
+                    .message("이미 사용중인 아이디입니다.")
+                    .build();
+        } else {
+            log.debug("아이디 중복 확인 - 사용 가능: {}", username);
+            return AuthDto.UsernameCheckResponse.builder()
+                    .username(username)
+                    .available(true)
+                    .message("사용 가능한 아이디입니다.")
+                    .build();
+        }
+    }
+
+    public AuthDto.LoginResponse login(AuthDto.LoginRequest loginRequest) {
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            loginRequest.getUsername(),
+                            loginRequest.getPassword()
+                    )
+            );
+
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            Account account = accountRepository.findByUsername(loginRequest.getUsername())
+                    .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+
+            String accessToken = jwtUtil.generateAccessToken(userDetails);
+            String refreshToken = jwtUtil.generateRefreshToken(userDetails);
+
+            log.info("로그인 성공 - 사용자: {}", loginRequest.getUsername());
+
+            return AuthDto.LoginResponse.builder()
+                    .accessToken(accessToken)
+                    .refreshToken(refreshToken)
+                    .tokenType("Bearer")
+                    .userInfo(AuthDto.LoginResponse.UserInfo.builder()
+                            .id(account.getId())
+                            .username(account.getUsername())
+                            .nickname(account.getNickname())
+                            .build())
+                    .build();
+
+        } catch (BadCredentialsException e) {
+            log.warn("로그인 실패 - 잘못된 인증 정보: {}", loginRequest.getUsername());
+            throw new IllegalArgumentException("아이디 또는 비밀번호가 올바르지 않습니다.");
+        }
+    }
 }

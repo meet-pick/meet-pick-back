@@ -125,6 +125,18 @@ public class AuthDto {
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
+    public static class UserInfoResponse {
+        private Long id;
+        private String username;
+        private String nickname;
+        private String location;
+        private String message;
+    }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
     public static class LogoutResponse {
         private String message;
     }

@@ -12,6 +12,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -125,5 +126,17 @@ public class AuthService {
             log.warn("로그인 실패 - 잘못된 인증 정보: {}", loginRequest.getUsername());
             throw new IllegalArgumentException("아이디 또는 비밀번호가 올바르지 않습니다.");
         }
+    }
+
+    public AuthDto.UserInfoResponse getUserInfo(String username) {
+        Account account = accountRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + username));
+
+        return AuthDto.UserInfoResponse.builder()
+                .id(account.getId())
+                .username(account.getUsername())
+                .nickname(account.getNickname())
+                .location(account.getLocation())
+                .message("로그인한 사용자입니다.")
+                .build();
     }
 }

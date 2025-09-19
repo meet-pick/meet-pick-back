@@ -9,6 +9,8 @@ import org.jpetto.meetpickback.auth.dto.AuthDto;
 import org.jpetto.meetpickback.auth.service.AuthService;
 import org.jpetto.meetpickback.global.utils.AuthCookieUtil;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -53,6 +55,21 @@ public class AuthController {
         return ResponseEntity.ok(AuthDto.SecureLoginResponse.from(loginResponse));
     }
 
+    @GetMapping("/me")
+    public ResponseEntity<AuthDto.UserInfoResponse> getCurrentUser(@AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails == null) {
+            return ResponseEntity.status(401).build();
+        }
+
+        try {
+            AuthDto.UserInfoResponse userInfo = authService.getUserInfo(userDetails.getUsername());
+            return ResponseEntity.ok(userInfo);
+        } catch (Exception e) {
+            log.error("사용자 정보 조회 실패: {}", e.getMessage());
+            return ResponseEntity.status(401).build();
+        }
+    }
+
     @DeleteMapping("/logout")
     public ResponseEntity<AuthDto.LogoutResponse> logout(HttpServletResponse response) {
         try {
@@ -63,7 +80,5 @@ public class AuthController {
             authCookieUtil.clearAuthenticationCookies(response);
             return ResponseEntity.ok(AuthDto.LogoutResponse.builder().message("로그아웃 완료").build());
         }
-
-
     }
 }

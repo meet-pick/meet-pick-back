@@ -3,6 +3,7 @@ package org.jpetto.meetpickback.auth.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -10,8 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/account")
 @RequiredArgsConstructor
 public class AccountController {
-    @GetMapping("/me")
+    @PatchMapping("/{accountId}")
     public String me() {
-        return "개인정보 조회";
+        return "개인정보 수정";
     }
 }

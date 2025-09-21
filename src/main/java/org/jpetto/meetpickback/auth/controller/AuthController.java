@@ -1,5 +1,7 @@
 package org.jpetto.meetpickback.auth.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -24,11 +26,10 @@ public class AuthController {
     private final AuthService authService;
     private final AuthCookieUtil authCookieUtil;
 
-    @PostMapping("/test")
-    public String test() {
-        return "test";
-    }
-
+    @Operation(
+            summary = "회원가입",
+            description = "필수 입력 : 아이디, 비밀번호, 닉네임<br> 선택 입력: 지역"
+    )
     @PostMapping("/signup")
     public ResponseEntity<AuthDto.SignUpResponse> signup(@Valid @RequestBody AuthDto.SignUpRequest signUpRequest) {
         try {
@@ -40,12 +41,22 @@ public class AuthController {
         }
     }
 
+    @Operation(
+            summary = "아이디 중복 체크",
+            description = "필수 입력 : 아이디"
+    )
     @GetMapping("/check-id/{username}")
-    public ResponseEntity<AuthDto.UsernameCheckResponse> checkId(@PathVariable String username) {
+    public ResponseEntity<AuthDto.UsernameCheckResponse> checkId(
+            @Parameter(description = "중복 확인할 아이디", example = "user123")
+            @PathVariable String username) {
         AuthDto.UsernameCheckResponse response = authService.checkUsername(username);
         return ResponseEntity.ok(response);
     }
 
+    @Operation(
+            summary = "로그인",
+            description = "필수 입력 : 아이디, 비밀번호"
+    )
     @PostMapping("/login")
     public ResponseEntity<AuthDto.SecureLoginResponse> login(@Valid @RequestBody AuthDto.LoginRequest loginRequest, HttpServletResponse response) {
         AuthDto.LoginResponse loginResponse= authService.login(loginRequest);
@@ -55,6 +66,10 @@ public class AuthController {
         return ResponseEntity.ok(AuthDto.SecureLoginResponse.from(loginResponse));
     }
 
+    @Operation(
+            summary = "유저 정보 조회",
+            description = "필수 단계 : 로그인(login api 진행 후 쿠키 받기)"
+    )
     @GetMapping("/me")
     public ResponseEntity<AuthDto.UserInfoResponse> getCurrentUser(@AuthenticationPrincipal UserDetails userDetails) {
         if (userDetails == null) {
@@ -70,6 +85,10 @@ public class AuthController {
         }
     }
 
+    @Operation(
+            summary = "로그아웃",
+            description = "필수 입력 : 아이디, 비밀번호"
+    )
     @DeleteMapping("/logout")
     public ResponseEntity<AuthDto.LogoutResponse> logout(HttpServletResponse response) {
         try {

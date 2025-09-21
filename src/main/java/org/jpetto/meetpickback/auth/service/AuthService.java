@@ -11,11 +11,12 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import static org.jpetto.meetpickback.global.utils.StringUtil.nvl;
 
 @Slf4j
 @Service
@@ -51,10 +52,6 @@ public class AuthService {
                 .nickname(newAccount.getNickname())
                 .message("회원가입이 완료되었습니다.")
                 .build();
-    }
-
-    private String nvl(String value) {
-        return value == null ? "" : value;
     }
 
     public AuthDto.UsernameCheckResponse checkUsername(String username) {

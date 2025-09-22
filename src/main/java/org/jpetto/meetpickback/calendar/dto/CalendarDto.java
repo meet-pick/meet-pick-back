@@ -1,17 +1,16 @@
 package org.jpetto.meetpickback.calendar.dto;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.jpetto.meetpickback.calendar.entity.Calendar;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CalendarDto {
 
@@ -38,13 +37,18 @@ public class CalendarDto {
         private String place;
     }
 
-//    @Getter
-//    @NoArgsConstructor
-//    @AllArgsConstructor
-//    @Builder
-//    public static class calendarUpdateRequest {
-//
-//    }
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class calendarUpdateRequest {
+        private String title;
+        private String description;
+        private LocalDateTime startDate;
+        private LocalDateTime endDate;
+        private String color;
+        private String place;
+    }
 
     // response
     @Getter
@@ -55,19 +59,32 @@ public class CalendarDto {
         private String message;
     }
 
-//    @Getter
-//    @NoArgsConstructor
-//    @AllArgsConstructor
-//    @Builder
-//    public static class calendarUpdateResponse {
-//
-//    }
-//
-//    @Getter
-//    @NoArgsConstructor
-//    @AllArgsConstructor
-//    @Builder
-//    public static class calendarDeleteResponse {
-//
-//    }
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class calendarUpdateResponse {
+        private String message;
+    }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class calendarDeleteResponse {
+        private String message;
+    }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class calendarGetResponse {
+        private String title;
+        private String description;
+        private LocalDateTime startDate;
+        private LocalDateTime endDate;
+        private String color;
+        private String place;
+    }
 }

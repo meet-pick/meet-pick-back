@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.jpetto.meetpickback.calendar.entity.Calendar;
 import org.jpetto.meetpickback.global.jpa.BaseEntity;
@@ -16,7 +17,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
-@Getter
+@Getter @Setter
 @Table(name = "account")
 @AllArgsConstructor
 @NoArgsConstructor

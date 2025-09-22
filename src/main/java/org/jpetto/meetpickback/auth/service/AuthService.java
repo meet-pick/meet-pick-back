@@ -28,6 +28,7 @@ public class AuthService {
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
 
+    @Transactional
     public AuthDto.SignUpResponse signUp(AuthDto.SignUpRequest signUpRequest) {
         if (accountRepository.existsByUsername(signUpRequest.getUsername())) {
             throw new IllegalArgumentException("이미 존재하는 아이디입니다.");
@@ -90,6 +91,7 @@ public class AuthService {
         }
     }
 
+    @Transactional
     public AuthDto.LoginResponse login(AuthDto.LoginRequest loginRequest) {
         try {
             Authentication authentication = authenticationManager.authenticate(

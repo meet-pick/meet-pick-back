@@ -1,21 +1,20 @@
-package org.jpetto.meetpickback.auth.controller;
+package org.jpetto.meetpickback.account.auth.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.jpetto.meetpickback.auth.dto.AuthDto;
-import org.jpetto.meetpickback.auth.service.AuthService;
+import org.jpetto.meetpickback.account.account.entity.Account;
+import org.jpetto.meetpickback.account.auth.dto.AuthDto;
+import org.jpetto.meetpickback.account.auth.service.AuthService;
+import org.jpetto.meetpickback.global.loginUser.LoginUser;
 import org.jpetto.meetpickback.global.utils.AuthCookieUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @Slf4j
 @RestController
@@ -71,13 +70,13 @@ public class AuthController {
             description = "필수 단계 : 로그인(login api 진행 후 쿠키 받기)"
     )
     @GetMapping("/me")
-    public ResponseEntity<AuthDto.UserInfoResponse> getCurrentUser(@AuthenticationPrincipal UserDetails userDetails) {
-        if (userDetails == null) {
+    public ResponseEntity<AuthDto.UserInfoResponse> getCurrentUser(@LoginUser Account loginUser) {
+        if (loginUser == null) {
             return ResponseEntity.status(401).build();
         }
 
         try {
-            AuthDto.UserInfoResponse userInfo = authService.getUserInfo(userDetails.getUsername());
+            AuthDto.UserInfoResponse userInfo = authService.getUserInfo(loginUser.getUsername());
             return ResponseEntity.ok(userInfo);
         } catch (Exception e) {
             log.error("사용자 정보 조회 실패: {}", e.getMessage());

@@ -1,9 +1,8 @@
 package org.jpetto.meetpickback.global.loginUser;
 
 import lombok.RequiredArgsConstructor;
-import org.jpetto.meetpickback.auth.entity.Account;
-import org.jpetto.meetpickback.auth.repository.AccountRepository;
-import org.jpetto.meetpickback.auth.service.AuthService;
+import org.jpetto.meetpickback.account.account.entity.Account;
+import org.jpetto.meetpickback.account.account.repository.AccountRepository;
 import org.springframework.core.MethodParameter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

@@ -4,9 +4,8 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import org.jpetto.meetpickback.auth.entity.Account;
+import org.jpetto.meetpickback.account.account.entity.Account;
 import org.jpetto.meetpickback.global.jpa.BaseEntity;
 
 import java.time.LocalDateTime;

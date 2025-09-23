@@ -80,6 +80,7 @@ public class CalendarDto {
     @AllArgsConstructor
     @Builder
     public static class calendarGetResponse {
+        private long id;
         private String title;
         private String description;
         private LocalDateTime startDate;

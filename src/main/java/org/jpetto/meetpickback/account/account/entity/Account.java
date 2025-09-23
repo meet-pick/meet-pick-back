@@ -1,4 +1,4 @@
-package org.jpetto.meetpickback.auth.entity;
+package org.jpetto.meetpickback.account.account.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

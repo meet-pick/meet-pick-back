@@ -1,7 +1,7 @@
 package org.jpetto.meetpickback.calendar.service;
 
 import lombok.RequiredArgsConstructor;
-import org.jpetto.meetpickback.auth.entity.Account;
+import org.jpetto.meetpickback.account.account.entity.Account;
 import org.jpetto.meetpickback.calendar.dto.CalendarDto;
 import org.jpetto.meetpickback.calendar.entity.Calendar;
 import org.jpetto.meetpickback.calendar.repository.CalendarRepository;
@@ -103,13 +103,14 @@ public class CalendarService {
         for (Calendar calendar : calendars) {
             calendarList.add(
                     CalendarDto.calendarGetResponse.builder()
-                    .title(calendar.getTitle())
-                    .description(calendar.getDescription())
-                    .startDate(calendar.getStartDate())
-                    .endDate(calendar.getEndDate())
-                    .color(calendar.getColor())
-                    .place(calendar.getPlace())
-                    .build()
+                            .id(calendar.getId())
+                            .title(calendar.getTitle())
+                            .description(calendar.getDescription())
+                            .startDate(calendar.getStartDate())
+                            .endDate(calendar.getEndDate())
+                            .color(calendar.getColor())
+                            .place(calendar.getPlace())
+                            .build()
             );
         }
 

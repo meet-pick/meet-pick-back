@@ -2,10 +2,11 @@ package org.jpetto.meetpickback.calendar.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.jpetto.meetpickback.auth.entity.Account;
+import org.jpetto.meetpickback.account.account.entity.Account;
 import org.jpetto.meetpickback.calendar.dto.CalendarDto;
 import org.jpetto.meetpickback.calendar.service.CalendarService;
 import org.jpetto.meetpickback.global.loginUser.LoginUser;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -73,7 +74,9 @@ public class CalendarController {
     @GetMapping
     public ResponseEntity<List<CalendarDto.calendarGetResponse>> getCalendars(
             @LoginUser Account loginUser,
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
             @RequestParam LocalDateTime startDate,
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
             @RequestParam LocalDateTime endDate
     ) {
 

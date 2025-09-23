@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.jpetto.meetpickback.account.friend.entity.Friend;
 import org.jpetto.meetpickback.calendar.entity.Calendar;
 import org.jpetto.meetpickback.global.jpa.BaseEntity;
 import org.springframework.security.core.GrantedAuthority;
@@ -40,6 +41,12 @@ public class Account extends BaseEntity implements UserDetails {
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Calendar> calendars = new ArrayList<>();
+
+    @OneToMany(mappedBy = "account")
+    private List<Friend> sentFriends = new ArrayList<>();
+
+    @OneToMany(mappedBy = "friend")
+    private List<Friend> receivedFriends = new ArrayList<>();
 
 
     // Security를 위해 UserDetails 인터페이스 필수 구현 메서드

@@ -1,5 +1,7 @@
 package org.jpetto.meetpickback.calendar.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.jpetto.meetpickback.account.account.entity.Account;
@@ -19,10 +21,13 @@ import java.util.List;
 public class CalendarController {
     private final CalendarService calendarService;
 
-    /* 일정 추가 */
+    @Operation(
+            summary = "캘린더 이벤트 추가",
+            description = "필수 입력 : 타이틀, 시작 날짜, 종료 날짜, 색상 <br> 선택 입력: 설명, 지역"
+    )
     @PostMapping
     public ResponseEntity<CalendarDto.calendarCreateResponse> createCalendar(
-            @LoginUser Account loginUser,
+            @Parameter(hidden = true) @LoginUser Account loginUser,
             @Valid @RequestBody CalendarDto.calendarCreateRequest request) {
 
         if (loginUser == null) {
@@ -39,11 +44,14 @@ public class CalendarController {
         }
     }
 
+    @Operation(
+            summary = "캘린더 이벤트 수정",
+            description = "선택 입력 : 타이틀, 설명, 시작 날짜, 종료 날짜, 색상, 지역"
+    )
     @PatchMapping("/{calendarId}")
-    /* 일정 수정 */
     public ResponseEntity<CalendarDto.calendarUpdateResponse> updateCalendar(
-            @LoginUser Account loginUser,
-            @PathVariable long calendarId,
+            @Parameter(hidden = true) @LoginUser Account loginUser,
+            @Parameter(description = "캘린더 아이디", example = "1") @PathVariable long calendarId,
             @Valid @RequestBody CalendarDto.calendarUpdateRequest request) {
 
         if (loginUser == null) {
@@ -55,11 +63,14 @@ public class CalendarController {
         return ResponseEntity.ok(response);
     }
 
-    /* 일정 삭제 */
+    @Operation(
+            summary = "캘린더 이벤트 삭제",
+            description = "선택 입력 : 타이틀, 설명, 시작 날짜, 종료 날짜, 색상, 지역"
+    )
     @DeleteMapping("/{calendarId}")
     public ResponseEntity<CalendarDto.calendarDeleteResponse> deleteCalendar(
-            @LoginUser Account loginUser,
-            @PathVariable long calendarId) {
+            @Parameter(hidden = true) @LoginUser Account loginUser,
+            @Parameter(description = "캘린더 아이디", example = "1") @PathVariable long calendarId) {
 
         if (loginUser == null) {
             return ResponseEntity.status(401).build();
@@ -73,11 +84,11 @@ public class CalendarController {
     /* 일정 조회 */
     @GetMapping
     public ResponseEntity<List<CalendarDto.calendarGetResponse>> getCalendars(
-            @LoginUser Account loginUser,
+            @Parameter(hidden = true) @LoginUser Account loginUser,
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-            @RequestParam LocalDateTime startDate,
+            @Parameter(description = "조회 시작 날짜", example = "2025-09-01T09:00:00") @RequestParam LocalDateTime startDate,
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-            @RequestParam LocalDateTime endDate
+            @Parameter(description = "조회 종료 날짜", example = "2025-09-30T09:00:00") @RequestParam LocalDateTime endDate
     ) {
 
         if (loginUser == null) {

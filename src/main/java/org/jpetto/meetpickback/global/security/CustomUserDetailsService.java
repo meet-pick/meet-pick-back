@@ -1,8 +1,7 @@
 package org.jpetto.meetpickback.global.security;
 
 import lombok.RequiredArgsConstructor;
-import org.jpetto.meetpickback.auth.entity.Account;
-import org.jpetto.meetpickback.auth.repository.AccountRepository;
+import org.jpetto.meetpickback.account.account.repository.AccountRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

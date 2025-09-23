@@ -1,21 +1,22 @@
-package org.jpetto.meetpickback.auth.service;
+package org.jpetto.meetpickback.account.auth.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.jpetto.meetpickback.auth.dto.AuthDto;
-import org.jpetto.meetpickback.auth.entity.Account;
-import org.jpetto.meetpickback.auth.repository.AccountRepository;
+import org.jpetto.meetpickback.account.auth.dto.AuthDto;
+import org.jpetto.meetpickback.account.account.entity.Account;
+import org.jpetto.meetpickback.account.account.repository.AccountRepository;
 import org.jpetto.meetpickback.global.utils.JwtUtil;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import static org.jpetto.meetpickback.global.utils.StringUtil.nvl;
 
 @Slf4j
 @Service
@@ -27,6 +28,7 @@ public class AuthService {
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
 
+    @Transactional
     public AuthDto.SignUpResponse signUp(AuthDto.SignUpRequest signUpRequest) {
         if (accountRepository.existsByUsername(signUpRequest.getUsername())) {
             throw new IllegalArgumentException("이미 존재하는 아이디입니다.");
@@ -51,10 +53,6 @@ public class AuthService {
                 .nickname(newAccount.getNickname())
                 .message("회원가입이 완료되었습니다.")
                 .build();
-    }
-
-    private String nvl(String value) {
-        return value == null ? "" : value;
     }
 
     public AuthDto.UsernameCheckResponse checkUsername(String username) {
@@ -93,6 +91,7 @@ public class AuthService {
         }
     }
 
+    @Transactional
     public AuthDto.LoginResponse login(AuthDto.LoginRequest loginRequest) {
         try {
             Authentication authentication = authenticationManager.authenticate(

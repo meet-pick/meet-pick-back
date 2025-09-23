@@ -1,22 +1,23 @@
-package org.jpetto.meetpickback.auth.entity;
+package org.jpetto.meetpickback.account.account.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.jpetto.meetpickback.calendar.entity.Calendar;
 import org.jpetto.meetpickback.global.jpa.BaseEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 @Entity
-@Getter
+@Getter @Setter
 @Table(name = "account")
 @AllArgsConstructor
 @NoArgsConstructor
@@ -36,6 +37,9 @@ public class Account extends BaseEntity implements UserDetails {
 
     @Column(name = "is_block", nullable = false)
     private boolean isBlock;
+
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Calendar> calendars = new ArrayList<>();
 
 
     // Security를 위해 UserDetails 인터페이스 필수 구현 메서드

@@ -1,6 +1,6 @@
-package org.jpetto.meetpickback.auth.repository;
+package org.jpetto.meetpickback.account.account.repository;
 
-import org.jpetto.meetpickback.auth.entity.Account;
+import org.jpetto.meetpickback.account.account.entity.Account;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

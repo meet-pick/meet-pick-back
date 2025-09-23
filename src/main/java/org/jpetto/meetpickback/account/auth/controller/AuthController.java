@@ -1,19 +1,20 @@
-package org.jpetto.meetpickback.auth.controller;
+package org.jpetto.meetpickback.account.auth.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.jpetto.meetpickback.auth.dto.AuthDto;
-import org.jpetto.meetpickback.auth.service.AuthService;
+import org.jpetto.meetpickback.account.account.entity.Account;
+import org.jpetto.meetpickback.account.auth.dto.AuthDto;
+import org.jpetto.meetpickback.account.auth.service.AuthService;
+import org.jpetto.meetpickback.global.loginUser.LoginUser;
 import org.jpetto.meetpickback.global.utils.AuthCookieUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @Slf4j
 @RestController
@@ -24,11 +25,10 @@ public class AuthController {
     private final AuthService authService;
     private final AuthCookieUtil authCookieUtil;
 
-    @PostMapping("/test")
-    public String test() {
-        return "test";
-    }
-
+    @Operation(
+            summary = "회원가입",
+            description = "필수 입력 : 아이디, 비밀번호, 닉네임<br> 선택 입력: 지역"
+    )
     @PostMapping("/signup")
     public ResponseEntity<AuthDto.SignUpResponse> signup(@Valid @RequestBody AuthDto.SignUpRequest signUpRequest) {
         try {
@@ -40,12 +40,22 @@ public class AuthController {
         }
     }
 
+    @Operation(
+            summary = "아이디 중복 체크",
+            description = "필수 입력 : 아이디"
+    )
     @GetMapping("/check-id/{username}")
-    public ResponseEntity<AuthDto.UsernameCheckResponse> checkId(@PathVariable String username) {
+    public ResponseEntity<AuthDto.UsernameCheckResponse> checkId(
+            @Parameter(description = "중복 확인할 아이디", example = "user123")
+            @PathVariable String username) {
         AuthDto.UsernameCheckResponse response = authService.checkUsername(username);
         return ResponseEntity.ok(response);
     }
 
+    @Operation(
+            summary = "로그인",
+            description = "필수 입력 : 아이디, 비밀번호"
+    )
     @PostMapping("/login")
     public ResponseEntity<AuthDto.SecureLoginResponse> login(@Valid @RequestBody AuthDto.LoginRequest loginRequest, HttpServletResponse response) {
         AuthDto.LoginResponse loginResponse= authService.login(loginRequest);
@@ -55,14 +65,18 @@ public class AuthController {
         return ResponseEntity.ok(AuthDto.SecureLoginResponse.from(loginResponse));
     }
 
+    @Operation(
+            summary = "유저 정보 조회",
+            description = "필수 단계 : 로그인(login api 진행 후 쿠키 받기)"
+    )
     @GetMapping("/me")
-    public ResponseEntity<AuthDto.UserInfoResponse> getCurrentUser(@AuthenticationPrincipal UserDetails userDetails) {
-        if (userDetails == null) {
+    public ResponseEntity<AuthDto.UserInfoResponse> getCurrentUser(@LoginUser Account loginUser) {
+        if (loginUser == null) {
             return ResponseEntity.status(401).build();
         }
 
         try {
-            AuthDto.UserInfoResponse userInfo = authService.getUserInfo(userDetails.getUsername());
+            AuthDto.UserInfoResponse userInfo = authService.getUserInfo(loginUser.getUsername());
             return ResponseEntity.ok(userInfo);
         } catch (Exception e) {
             log.error("사용자 정보 조회 실패: {}", e.getMessage());
@@ -70,6 +84,10 @@ public class AuthController {
         }
     }
 
+    @Operation(
+            summary = "로그아웃",
+            description = "필수 입력 : 아이디, 비밀번호"
+    )
     @DeleteMapping("/logout")
     public ResponseEntity<AuthDto.LogoutResponse> logout(HttpServletResponse response) {
         try {

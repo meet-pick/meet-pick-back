@@ -32,6 +32,7 @@ public class Calendar extends BaseEntity {
     @Column(name = "color", nullable = false)
     private String color;
 
+    @Column(name = "place")
     private String place;
 
     @ManyToOne(fetch = FetchType.LAZY)

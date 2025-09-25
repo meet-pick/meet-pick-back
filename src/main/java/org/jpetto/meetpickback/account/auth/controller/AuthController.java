@@ -70,7 +70,7 @@ public class AuthController {
             description = "필수 단계 : 로그인(login api 진행 후 쿠키 받기)"
     )
     @GetMapping("/me")
-    public ResponseEntity<AuthDto.UserInfoResponse> getCurrentUser(@LoginUser Account loginUser) {
+    public ResponseEntity<AuthDto.UserInfoResponse> getCurrentUser(@Parameter(hidden = true) @LoginUser Account loginUser) {
         if (loginUser == null) {
             return ResponseEntity.status(401).build();
         }

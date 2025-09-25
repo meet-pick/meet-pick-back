@@ -1,5 +1,6 @@
 package org.jpetto.meetpickback.calendar.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -21,19 +22,25 @@ public class CalendarDto {
     @Builder
     public static class calendarCreateRequest {
         @NotBlank
+        @Schema(description = "타이틀", example = "테스트")
         private String title;
 
+        @Schema(description = "설명(선택)", example = "테스트 설명입니다.")
         private String description;
 
         @NotNull
+        @Schema(description = "시작 날짜", example = "2025-09-01T09:00:00")
         private LocalDateTime startDate;
 
         @NotNull
+        @Schema(description = "종료 날짜", example = "2025-09-02T09:00:00")
         private LocalDateTime endDate;
 
         @NotBlank
+        @Schema(description = "색상", example = "#2EC4B6")
         private String color;
 
+        @Schema(description = "장소(선택)", example = "서울")
         private String place;
     }
 
@@ -42,11 +49,17 @@ public class CalendarDto {
     @AllArgsConstructor
     @Builder
     public static class calendarUpdateRequest {
+        @Schema(description = "타이틀", example = "테스트")
         private String title;
+        @Schema(description = "설명", example = "테스트 설명입니다.")
         private String description;
+        @Schema(description = "시작 날짜", example = "2025-09-01T09:00:00")
         private LocalDateTime startDate;
+        @Schema(description = "종료 날짜", example = "2025-09-02T09:00:00")
         private LocalDateTime endDate;
+        @Schema(description = "색상", example = "#2EC4B6")
         private String color;
+        @Schema(description = "장소", example = "서울")
         private String place;
     }
 

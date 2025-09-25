@@ -1,5 +1,7 @@
 package org.jpetto.meetpickback.account.friend.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,10 +22,13 @@ import java.util.List;
 public class FriendController {
     private final FriendService friendService;
 
-    /* 친구 추가 */
+    @Operation(
+            summary = "친구 추가",
+            description = "필수 입력 : 친구 AccountId"
+    )
     @PostMapping
     public ResponseEntity<FriendDto.friendAddResponse> addFriend(
-            @LoginUser Account loginUser,
+            @Parameter(hidden = true) @LoginUser Account loginUser,
             @Valid @RequestBody FriendDto.friendAddRequest request
     ) {
         if (loginUser == null) {
@@ -37,9 +42,13 @@ public class FriendController {
         return ResponseEntity.ok(response);
     }
 
-    /* 친구 리스트 조회 */
+    @Operation(
+            summary = "친구 조회",
+            description = "status -> PENDING(친구 요청 진행중), ACCEPTED(친구인 상태) <br>"
+                    + "isSender -> true : 사용자가 요청 / false : 사용자가 받음"
+    )
     @GetMapping
-    public ResponseEntity<List<FriendDto.friendGetResponse>> getFriend(@LoginUser Account loginUser) {
+    public ResponseEntity<List<FriendDto.friendGetResponse>> getFriend(@Parameter(hidden = true) @LoginUser Account loginUser) {
         if (loginUser == null) {
             throw new IllegalArgumentException("You are not logged in");
         }
@@ -49,10 +58,13 @@ public class FriendController {
         return ResponseEntity.ok(responses);
     }
 
-    /* 친구 수락 */
+    @Operation(
+            summary = "친구 수락",
+            description = "타인이 보낸 친구 요청을 수락함"
+    )
     @PatchMapping("/accept/{friendId}")
     public ResponseEntity<FriendDto.friendUpdateStatusResponse> acceptFriend(
-            @PathVariable long friendId,
+            @Parameter(description = "친구 요청 아이디", example = "1") @PathVariable long friendId,
             @LoginUser Account loginUser
     ) {
         if (loginUser == null) {
@@ -64,11 +76,14 @@ public class FriendController {
         return ResponseEntity.ok(response);
     }
 
-    /* 친구 거절 */
+    @Operation(
+            summary = "친구 거절",
+            description = "타인이 보낸 친구 요청을 거절함"
+    )
     @PatchMapping("/reject/{friendId}")
     public ResponseEntity<FriendDto.friendUpdateStatusResponse> rejectFriend(
-            @PathVariable long friendId,
-            @LoginUser Account loginUser
+            @Parameter(description = "친구 요청 아이디", example = "1") @PathVariable long friendId,
+            @Parameter(hidden = true) @LoginUser Account loginUser
     ) {
         if (loginUser == null) {
             throw new IllegalArgumentException("You are not logged in");
@@ -79,11 +94,14 @@ public class FriendController {
         return ResponseEntity.ok(response);
     }
 
-    /* 친구 취소 */
+    @Operation(
+            summary = "친구 취소",
+            description = "사용자가 보낸 친구 요청을 취소함"
+    )
     @PatchMapping("/cancel/{friendId}")
     public ResponseEntity<FriendDto.friendUpdateStatusResponse> cancelFriend(
-            @PathVariable long friendId,
-            @LoginUser Account loginUser
+            @Parameter(description = "친구 요청 아이디", example = "1") @PathVariable long friendId,
+            @Parameter(hidden = true) @LoginUser Account loginUser
     ) {
         if (loginUser == null) {
             throw new IllegalArgumentException("You are not logged in");
@@ -94,11 +112,14 @@ public class FriendController {
         return ResponseEntity.ok(response);
     }
 
-    /* 친구 삭제 */
+    @Operation(
+            summary = "친구 삭제",
+            description = "친구를 삭제함"
+    )
     @DeleteMapping("/{friendId}")
     public ResponseEntity<FriendDto.friendDeleteStatusResponse> deleteFriend(
-            @PathVariable long friendId,
-            @LoginUser Account loginUser
+            @Parameter(description = "친구 요청 아이디", example = "1") @PathVariable long friendId,
+            @Parameter(hidden = true) @LoginUser Account loginUser
     ) {
         if (loginUser == null) {
             throw new IllegalArgumentException("You are not logged in");

@@ -23,7 +23,7 @@ public class Friend extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "friend_id")
-    private Account friend;
+    private Account friendAccount;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 32)

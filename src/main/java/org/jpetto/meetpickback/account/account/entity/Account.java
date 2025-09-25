@@ -45,7 +45,7 @@ public class Account extends BaseEntity implements UserDetails {
     @OneToMany(mappedBy = "account")
     private List<Friend> sentFriends = new ArrayList<>();
 
-    @OneToMany(mappedBy = "friend")
+    @OneToMany(mappedBy = "friendAccount")
     private List<Friend> receivedFriends = new ArrayList<>();
 
 

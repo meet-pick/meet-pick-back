@@ -59,7 +59,7 @@ public class FriendService {
         Account target = isSender ? friend.getFriendAccount() : friend.getAccount();
 
         return FriendDto.friendGetResponse.builder()
-                .id(target.getId())
+                .id(friend.getId())
                 .username(target.getUsername())
                 .nickname(target.getNickname())
                 .status(friend.getStatus())

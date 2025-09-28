@@ -9,6 +9,7 @@ import lombok.experimental.SuperBuilder;
 import org.jpetto.meetpickback.account.friend.entity.Friend;
 import org.jpetto.meetpickback.calendar.entity.Calendar;
 import org.jpetto.meetpickback.global.jpa.BaseEntity;
+import org.jpetto.meetpickback.group.member.entity.Member;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -48,6 +49,8 @@ public class Account extends BaseEntity implements UserDetails {
     @OneToMany(mappedBy = "friendAccount")
     private List<Friend> receivedFriends = new ArrayList<>();
 
+    @OneToMany(mappedBy = "memberAccount")
+    private List<Member> members = new ArrayList<>();
 
     // Security를 위해 UserDetails 인터페이스 필수 구현 메서드
     // UserDetails = SpringSecurity에서 사용자 인증 정보를 담는 핵심 인터페이스

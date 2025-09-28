@@ -1,6 +1,7 @@
 package org.jpetto.meetpickback.account.friend.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,6 +15,7 @@ public class FriendDto {
     @Builder
     public static class friendAddRequest {
         @Schema(description = "친구 테이블 Id", example = "1")
+        @NotNull
         private long friendId;
     }
 

@@ -44,8 +44,8 @@ public class AuthService {
 
         accountRepository.save(newAccount);
 
-        log.info("새로운 사용자 회원가입 완료. id: {}, pw: {}, nickname: {}, location: {}, block: {}",
-                newAccount.getUsername(), newAccount.getNickname(), newAccount.getNickname(), newAccount.getLocation(), newAccount.isBlock());
+        log.info("새로운 사용자 회원가입 완료. id: {},username: {} pw: {}, nickname: {}, location: {}, block: {}",
+                newAccount.getId(), newAccount.getUsername(), newAccount.getNickname(), newAccount.getNickname(), newAccount.getLocation(), newAccount.isBlock());
 
         return AuthDto.SignUpResponse.builder()
                 .id(newAccount.getId())

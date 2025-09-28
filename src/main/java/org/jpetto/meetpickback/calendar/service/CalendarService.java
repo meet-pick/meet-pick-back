@@ -34,7 +34,7 @@ public class CalendarService {
                 .account(loginUser)
                 .build();
 
-        calendarRepository.save(calendar);
+        loginUser.getCalendars().add(calendar);
 
         return CalendarDto.calendarCreateResponse.builder().message("캘린더 이벤트 생성 완료").build();
     }

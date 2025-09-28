@@ -6,7 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.jpetto.meetpickback.group.members.dto.MemberDto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GroupDto {
@@ -43,6 +45,8 @@ public class GroupDto {
     @AllArgsConstructor
     @Builder
     public static class createGroupResponse {
+        private List<MemberDto.MemberInfo> failMembers = new ArrayList<>();
+
         private String message;
     }
 

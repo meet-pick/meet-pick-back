@@ -1,5 +1,7 @@
 package org.jpetto.meetpickback.group.group.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.jpetto.meetpickback.account.account.entity.Account;
@@ -17,9 +19,14 @@ import java.util.List;
 public class GroupController {
     private final GroupService groupService;
 
+    @Operation(
+            summary = "그룹 생성",
+            description = "필수 입력 : 이름 <br>" +
+                    "선택입력 : 설명, 멤버 AccountId"
+    )
     @PostMapping
     public ResponseEntity<GroupDto.createGroupResponse> createGroup(
-            @LoginUser Account loginUser,
+            @Parameter(hidden = true) @LoginUser Account loginUser,
             @Valid @RequestBody GroupDto.createGroupRequest request
     ) {
         if (loginUser == null) {
@@ -33,8 +40,8 @@ public class GroupController {
 
     @PatchMapping("/{groupId}")
     public ResponseEntity<GroupDto.updateGroupResponse> updateGroup(
-            @LoginUser Account loginUser,
-            @PathVariable long groupId,
+            @Parameter(hidden = true) @LoginUser Account loginUser,
+            @Parameter(description = "수정할 그룹 id", example = "1") @PathVariable long groupId,
             @Valid @RequestBody GroupDto.updateGroupRequest request
     ) {
         if (loginUser == null) {
@@ -48,8 +55,8 @@ public class GroupController {
 
     @DeleteMapping("/{groupId}")
     public ResponseEntity<GroupDto.deleteGroupResponse> deleteGroup(
-            @LoginUser Account loginUser,
-            @PathVariable long groupId
+            @Parameter(hidden = true) @LoginUser Account loginUser,
+            @Parameter(description = "수정할 그룹 id", example = "1") @PathVariable long groupId
     ) {
         if (loginUser == null) {
             throw new SecurityException("You are not logged in");
@@ -61,7 +68,7 @@ public class GroupController {
     }
 
     @GetMapping
-    public ResponseEntity<List<GroupDto.getGroupResponse>> getGroups(@LoginUser Account loginUser) {
+    public ResponseEntity<List<GroupDto.getGroupResponse>> getGroups(@Parameter(hidden = true) @LoginUser Account loginUser) {
         if (loginUser == null) {
             throw new SecurityException("You are not logged in");
         }

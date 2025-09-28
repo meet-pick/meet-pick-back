@@ -6,14 +6,12 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.jpetto.meetpickback.account.account.entity.Account;
+import org.jpetto.meetpickback.account.accounts.entity.Account;
 import org.jpetto.meetpickback.account.auth.dto.AuthDto;
 import org.jpetto.meetpickback.account.auth.service.AuthService;
 import org.jpetto.meetpickback.global.loginUser.LoginUser;
 import org.jpetto.meetpickback.global.utils.AuthCookieUtil;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j

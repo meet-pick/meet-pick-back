@@ -1,7 +1,7 @@
 package org.jpetto.meetpickback.account.auth.service;
 
-import org.jpetto.meetpickback.account.account.entity.Account;
-import org.jpetto.meetpickback.account.account.repository.AccountRepository;
+import org.jpetto.meetpickback.account.accounts.entity.Account;
+import org.jpetto.meetpickback.account.accounts.repository.AccountRepository;
 import org.jpetto.meetpickback.account.auth.dto.AuthDto;
 import org.jpetto.meetpickback.global.utils.JwtUtil;
 import org.junit.jupiter.api.DisplayName;

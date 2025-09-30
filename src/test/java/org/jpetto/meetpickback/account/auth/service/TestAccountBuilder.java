@@ -1,6 +1,6 @@
 package org.jpetto.meetpickback.account.auth.service;
 
-import org.jpetto.meetpickback.account.account.entity.Account;
+import org.jpetto.meetpickback.account.accounts.entity.Account;
 
 import java.lang.reflect.Field;
 

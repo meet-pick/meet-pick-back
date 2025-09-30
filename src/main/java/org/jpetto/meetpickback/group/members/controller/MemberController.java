@@ -1,5 +1,7 @@
 package org.jpetto.meetpickback.group.members.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -23,11 +25,14 @@ public class MemberController {
     private final MemberService memberService;
     private final GroupService groupService;
 
-    /* 멤버 추가 */
+    @Operation(
+            summary = "그룹 멤버 추가",
+            description = "필수 입력 : 그룹Id, 멤버IdList"
+    )
     @PostMapping
     public ResponseEntity<MemberDto.addMemberResponse> addMember(
-            @PathVariable long groupId,
-            @LoginUser Account loginUser,
+            @Parameter(description = "멤버를 추가할 그룹 id", example = "1") @PathVariable long groupId,
+            @Parameter(hidden = true) @LoginUser Account loginUser,
             @Valid @RequestBody MemberDto.addMemberRequest request
     ) {
         if (loginUser == null) {
@@ -42,17 +47,20 @@ public class MemberController {
     /* 멤버 강퇴 */
     // 강퇴는 추후 추가
 
-    /* 멤버 나가기 (강퇴랑 동일 서비스 사용) */
+    @Operation(
+            summary = "그룹 나가기",
+            description = "필수 입력 : 그룹Id"
+    )
     @DeleteMapping
     public ResponseEntity<MemberDto.deleteMemberResponse> deleteMember(
-            @PathVariable long groupId,
-            @LoginUser Account account
+            @Parameter(description = "나갈 그룹 id", example = "1") @PathVariable long groupId,
+            @Parameter(hidden = true) @LoginUser Account loginUser
     ) {
-        if (account == null) {
+        if (loginUser == null) {
             throw new SecurityException("You are not logged in");
         }
 
-        MemberDto.deleteMemberResponse response = groupService.deleteMemberToGroup(account, groupId);
+        MemberDto.deleteMemberResponse response = groupService.deleteMemberToGroup(loginUser, groupId);
 
         return ResponseEntity.ok(response);
     }
@@ -60,15 +68,15 @@ public class MemberController {
     /* 방장 위임 */
     @PatchMapping("/{memberId}")
     public ResponseEntity<MemberDto.transferOwnershipResponse> transferOwnership(
-            @PathVariable long groupId,
-            @PathVariable long memberId,
-            @LoginUser Account account
+            @Parameter(description = "내가 속한 그룹 id", example = "1") @PathVariable long groupId,
+            @Parameter(description = "방장을 위임할 멤버 id", example = "2") @PathVariable long memberId,
+            @Parameter(hidden = true) @LoginUser Account loginUser
     ) {
-        if (account == null) {
+        if (loginUser == null) {
             throw new SecurityException("You are not logged in");
         }
 
-        MemberDto.transferOwnershipResponse response = groupService.changeOwnership(account, groupId, memberId);
+        MemberDto.transferOwnershipResponse response = groupService.changeOwnership(loginUser, groupId, memberId);
 
         return ResponseEntity.ok(response);
     }
@@ -76,8 +84,8 @@ public class MemberController {
     /* 멤버 조회 */
     @GetMapping
     public ResponseEntity<MemberDto.getMemberResponse> getMembers(
-            @PathVariable long groupId,
-            @LoginUser Account loginUser
+            @Parameter(description = "멤버를 조회할 그룹 id", example = "1") @PathVariable long groupId,
+            @Parameter(hidden = true) @LoginUser Account loginUser
     ) {
         if (loginUser == null) {
             throw new SecurityException("You are not logged in");

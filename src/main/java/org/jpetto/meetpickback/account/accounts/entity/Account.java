@@ -40,6 +40,9 @@ public class Account extends BaseEntity implements UserDetails {
     @Column(name = "is_block", nullable = false)
     private boolean isBlock;
 
+    @Column(name = "profile", nullable = false)
+    private String profile;
+
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Calendar> calendars = new ArrayList<>();
 

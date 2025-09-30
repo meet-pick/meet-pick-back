@@ -1,5 +1,6 @@
 package org.jpetto.meetpickback.group.members.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,6 +16,7 @@ public class MemberDto {
     @NoArgsConstructor
     @Builder
     public static class addMemberRequest {
+        @Schema(description = "추가할 멤버 Id 리스트", example = "[1, 2, 3]")
         @NotEmpty
         private List<Long> memberIds;
     }
